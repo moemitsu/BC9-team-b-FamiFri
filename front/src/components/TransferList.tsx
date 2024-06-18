@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Transfer } from '../types';
 
-const TransferList = () => {
-  const [transfers, setTransfers] = useState([]);
+const TransferList: React.FC = () => {
+  const [transfers, setTransfers] = useState<Transfer[]>([]);
 
   useEffect(() => {
     const fetchTransfers = async () => {
       try {
-        const response = await axios.get('/api/transfers');
+        const response = await axios.get<Transfer[]>('/api/transfers');
         setTransfers(response.data);
       } catch (error) {
         console.error('Error fetching transfers:', error);
