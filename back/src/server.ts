@@ -1,6 +1,7 @@
-const express = require('express');
-const axios = require('axios');
-const dotenv = require('dotenv');
+import express, { Request, Response } from 'express';
+import axios from 'axios';
+import dotenv from 'dotenv';
+import { Transfer } from './types';
 
 dotenv.config();
 
@@ -9,11 +10,9 @@ const port = process.env.PORT || 3001;
 
 app.use(express.json());
 
-// 振替データを保存するためのメモリ内データベース
-let transfers = [];
+let transfers: Transfer[] = [];
 
-// 振替エンドポイント
-app.post('/api/transfer', async (req, res) => {
+app.post('/api/transfer', async (req: Request, res: Response) => {
   const { amount, name, purpose } = req.body;
 
   try {
@@ -34,30 +33,36 @@ app.post('/api/transfer', async (req, res) => {
     transfers.push({ amount, name, purpose, date: new Date() });
 
     res.status(200).json({ message: 'Transfer successful', transfers });
-  } catch (error) {
-    res.status(500).json({ error: 'Transfer failed' });
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      res.status(error.response?.status || 500).json({ error: error.response?.data });
+    } else {
+      res.status(500).json({ error: 'Transfer failed' });
+    }
   }
 });
 
-// 残高確認エンドポイント
-app.get('/api/balance', async (req, res) => {
+app.get('/api/balance', async (req: Request, res: Response) => {
   const { account } = req.query;
 
   try {
-    const response = await axios.get(`${process.env.SUNABAR_API_URL}/accounts/${account}/balance`, {
+    const response = await axios.get(`${process.env.SUNABAR_API_URL}/accounts/balance`, {
       headers: {
         'Authorization': `Bearer ${process.env.SUNABAR_API_KEY}`
       }
     });
 
     res.status(200).json(response.data);
-  } catch (error) {
-    res.status(error.response.status).json({ error: error.response.data });
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      res.status(error.response?.status || 500).json({ error: error.response?.data });
+    } else {
+      res.status(500).json({ error: 'Balance check failed' });
+    }
   }
 });
 
-// 振替リスト取得エンドポイント
-app.get('/api/transfers', (req, res) => {
+app.get('/api/transfers', (req: Request, res: Response) => {
   res.status(200).json(transfers);
 });
 

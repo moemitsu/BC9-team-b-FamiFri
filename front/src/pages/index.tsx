@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import TransferForm from '../components/TransferForm';
 import BalanceCheck from '../components/BalanceCheck';
 import TransferList from '../components/TransferList';
+import { Transfer } from '../types';
 
 export default function Home() {
-  const [transfers, setTransfers] = useState([]);
+  const [transfers, setTransfers] = useState<Transfer[]>([]);
 
-  const handleTransfer = (newTransfers) => {
+  const handleTransfer = (newTransfers: Transfer[]) => {
     setTransfers(newTransfers);
   };
 
