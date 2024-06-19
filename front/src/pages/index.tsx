@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import TransferForm from '../components/TransferForm';
+// import TransferForm from '../components/TransferForm';
 import BalanceCheck from '../components/BalanceCheck';
-import TransferList from '../components/TransferList';
+// import TransferList from '../components/TransferList';
 import { Transfer } from '../types';
 
 export default function Home() {
@@ -14,9 +14,9 @@ export default function Home() {
   return (
     <div>
       <h1>Banking App</h1>
-      <TransferForm onTransfer={handleTransfer} />
+      {/* <TransferForm onTransfer={handleTransfer} /> */}
       <BalanceCheck />
-      <TransferList />
+      {/* <TransferList /> */}
     </div>
   );
 }
