@@ -25,6 +25,7 @@ export interface BalanceResponse {
   spAccountBalances: SpAccountBalance[];
 }
 
+
 export interface Transfer {
   accountId: string;
   transferDesignatedDate: string;
@@ -40,4 +41,6 @@ export interface Transfer {
     accountNumber: string;
     beneficiaryName: string;
   }[];
+
 }
+

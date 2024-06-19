@@ -14,48 +14,47 @@ app.use(cors());
 
 let transfers: Transfer[] = [];
 
-interface SunabarTransferRequest {
-  accountId: string;
-  transferDesignatedDate: string;
-  transferDateHolidayCode: string;
-  totalCount: string;
-  totalAmount: string;
-  transfers: {
-    itemId: string;
-    transferAmount: string;
-    beneficiaryBankCode: string;
-    beneficiaryBranchCode: string;
-    accountTypeCode: string;
-    accountNumber: string;
-    beneficiaryName: string;
-  }[];
-}
 
-// 振込依頼
-app.post('/api/transfer', async (req: Request<any, any, SunabarTransferRequest>, res: Response) => {
-  // const { amount, name, purpose } = req.body;
+app.post('/api/transfer', async (req: Request, res: Response) => {
+  const { itemId, transferAmount, beneficiaryBankCode, beneficiaryBranchCode, accountTypeCode, accountNumber, beneficiaryName } = req.body;
+
+  if (!itemId || !transferAmount || !beneficiaryBankCode || !beneficiaryBranchCode || !accountTypeCode || !accountNumber || !beneficiaryName) {
+    const missingParams = [];
+    if (!itemId) missingParams.push('itemId');
+    if (!transferAmount) missingParams.push('transferAmount');
+    if (!beneficiaryBankCode) missingParams.push('beneficiaryBankCode');
+    if (!beneficiaryBranchCode) missingParams.push('beneficiaryBranchCode');
+    if (!accountTypeCode) missingParams.push('accountTypeCode');
+    if (!accountNumber) missingParams.push('accountNumber');
+    if (!beneficiaryName) missingParams.push('beneficiaryName');
+    
+
+    return res.status(400).json({ error: 'Missing required parameters', missingParams });
+  }
 
   try {
-    const requestBody: SunabarTransferRequest = {
-      accountId: "302010008730",
-      transferDesignatedDate: "2024-06-19",
+    // Sunabar APIでの振替処理
+    const transferRequest = {
+      accountId: "302010008723",
+      transferDesignatedDate: new Date().toISOString().split('T')[0], // 当日の日付
       transferDateHolidayCode: "1",
       totalCount: "1",
-      totalAmount: "30000",
+      totalAmount: transferAmount.toString(),
       transfers: [
         {
           itemId: "1",
-          transferAmount: "30000",
-          beneficiaryBankCode: "0310",
-          beneficiaryBranchCode: "101",
-          accountTypeCode: "1",
-          accountNumber: "0009645",
-          beneficiaryName: "ｽﾅﾊﾞ ｱﾔｶ(ｶ"
+          transferAmount: transferAmount.toString(),
+          beneficiaryBankCode,
+          beneficiaryBranchCode,
+          accountTypeCode,
+          accountNumber,
+          beneficiaryName
         }
       ]
     };
 
-    const response = await axios.post(`${process.env.SUNABAR_API_URL}/transfer/request`, requestBody, {
+    const response = await axios.post(`${process.env.SUNABAR_API_URL}/transfer/request`, transferRequest, {
+
       headers: {
         'Accept': 'application/json;charset=UTF-8',
         'Content-Type': 'application/json;charset=UTF-8',
@@ -64,12 +63,15 @@ app.post('/api/transfer', async (req: Request<any, any, SunabarTransferRequest>,
     });
 
     // 振替データを保存
-    // transfers.push({ amount, name, purpose, date: new Date() });
+
+    // transfers.push({ amount, name: beneficiaryName, purpose: "Transfer", fromAccount, toAccount, date: new Date() });
+
 
     res.status(200).json({ message: '振替が成功しました', transfers });
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       console.error('APIリクエストエラー:', error.response?.data);
+      console.error('詳細エラー:', error.toJSON());
       res.status(error.response?.status || 500).json({ error: error.response?.data });
     } else {
       console.error('予期しないエラー:', error);
@@ -86,7 +88,9 @@ app.get('/api/balance', async (req: Request, res: Response) => {
         'Accept': 'application/json;charset=UTF-8',
         'Content-Type': 'application/json;charset=UTF-8',
         'x-access-token': `${process.env.SUNABAR_API_KEY}`
-      }
+
+      },
+
     });
 
     res.status(200).json(response.data);
@@ -109,3 +113,4 @@ app.get('/api/transfers', (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`サーバーはポート${port}で動作しています`);
 });
+

@@ -13,6 +13,7 @@ export default function Home() {
   };
 
   return (
+
     <ChakraProvider>
       <Box minH="100vh" bg="teal.600" p={8}>
         <Heading color="white" mb={6}>famifri</Heading>
