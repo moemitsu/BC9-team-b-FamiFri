@@ -26,15 +26,6 @@ export interface BalanceResponse {
 }
 
 
-// export interface Transfer {
-//   amount: number;
-//   name: string;
-//   purpose: string;
-//   fromAccount: string;
-//   toAccount: string;
-//   date: Date;
-// }
-
 export interface Transfer {
   accountId: string;
   transferDesignatedDate: string;
@@ -50,5 +41,6 @@ export interface Transfer {
     accountNumber: string;
     beneficiaryName: string;
   }[];
+
 }
 

@@ -14,6 +14,7 @@ app.use(cors());
 
 let transfers: Transfer[] = [];
 
+
 app.post('/api/transfer', async (req: Request, res: Response) => {
   const { itemId, transferAmount, beneficiaryBankCode, beneficiaryBranchCode, accountTypeCode, accountNumber, beneficiaryName } = req.body;
 
@@ -53,6 +54,7 @@ app.post('/api/transfer', async (req: Request, res: Response) => {
     };
 
     const response = await axios.post(`${process.env.SUNABAR_API_URL}/transfer/request`, transferRequest, {
+
       headers: {
         'Accept': 'application/json;charset=UTF-8',
         'Content-Type': 'application/json;charset=UTF-8',
@@ -61,7 +63,9 @@ app.post('/api/transfer', async (req: Request, res: Response) => {
     });
 
     // 振替データを保存
+
     // transfers.push({ amount, name: beneficiaryName, purpose: "Transfer", fromAccount, toAccount, date: new Date() });
+
 
     res.status(200).json({ message: '振替が成功しました', transfers });
   } catch (error: unknown) {
@@ -76,6 +80,7 @@ app.post('/api/transfer', async (req: Request, res: Response) => {
   }
 });
 
+// 残高照会
 app.get('/api/balance', async (req: Request, res: Response) => {
   try {
     const response = await axios.get(`${process.env.SUNABAR_API_URL}/accounts/balances`, {
@@ -83,7 +88,9 @@ app.get('/api/balance', async (req: Request, res: Response) => {
         'Accept': 'application/json;charset=UTF-8',
         'Content-Type': 'application/json;charset=UTF-8',
         'x-access-token': `${process.env.SUNABAR_API_KEY}`
+
       },
+
     });
 
     res.status(200).json(response.data);
@@ -98,6 +105,7 @@ app.get('/api/balance', async (req: Request, res: Response) => {
   }
 });
 
+// 振込履歴照会
 app.get('/api/transfers', (req: Request, res: Response) => {
   res.status(200).json(transfers);
 });

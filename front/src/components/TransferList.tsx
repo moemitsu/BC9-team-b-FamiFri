@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Transfer } from '../types';
+import { Box, Heading, UnorderedList, ListItem } from '@chakra-ui/react';
 
 const TransferList: React.FC = () => {
   const [transfers, setTransfers] = useState<Transfer[]>([]);
@@ -8,7 +9,7 @@ const TransferList: React.FC = () => {
   useEffect(() => {
     const fetchTransfers = async () => {
       try {
-        const response = await axios.get<Transfer[]>('/api/transfers');
+        const response = await axios.get<Transfer[]>('http://localhost:3001//api/transfers');
         setTransfers(response.data);
       } catch (error) {
         console.error('Error fetching transfers:', error);
@@ -19,16 +20,16 @@ const TransferList: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Transfer List</h2>
-      <ul>
-        {transfers.map((transfer, index) => (
-          <li key={index}>
-            <strong>{transfer.name}</strong> - {transfer.purpose}: {transfer.amount} on {new Date(transfer.date).toLocaleString()}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Box bg="teal.800" color="white" p={4} rounded="md" mb={6}>
+    <Heading size="md" mb={4}>Transfer List</Heading>
+    <UnorderedList>
+      {transfers.map((transfer, index) => (
+        <ListItem key={index}>
+          <strong>{transfer.name}</strong> - {transfer.purpose}: {transfer.amount} on {new Date(transfer.date).toLocaleString()}
+        </ListItem>
+      ))}
+    </UnorderedList>
+  </Box>
   );
 };
 
