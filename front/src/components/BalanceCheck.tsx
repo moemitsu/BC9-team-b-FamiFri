@@ -31,7 +31,7 @@ const BalanceCheck: React.FC = () => {
 
   return (
     <Box bg="teal.800" color="white" p={4} rounded="md" mb={6}>
-    <Heading size="md" mb={4}>残高照会します</Heading>
+    <Heading size="md" mb={4}>残高照会はこちら</Heading>
     <form onSubmit={handleCheckBalance}>
       <Button type="submit" colorScheme="teal" mb={4}>
         残高照会します

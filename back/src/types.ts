@@ -24,3 +24,20 @@ export interface BalanceResponse {
   balances: Balance[];
   spAccountBalances: SpAccountBalance[];
 }
+
+export interface Transfer {
+  accountId: string;
+  transferDesignatedDate: string;
+  transferDateHolidayCode: string;
+  totalCount: string;
+  totalAmount: string;
+  transfers: {
+    itemId: string;
+    transferAmount: string;
+    beneficiaryBankCode: string;
+    beneficiaryBranchCode: string;
+    accountTypeCode: string;
+    accountNumber: string;
+    beneficiaryName: string;
+  }[];
+}
