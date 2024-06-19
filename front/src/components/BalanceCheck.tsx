@@ -1,21 +1,17 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import axios from 'axios';
-
-interface BalanceResponse {
-  balance: number;
-}
+import { BalanceResponse } from './types';  // 型をインポート
 
 interface AxiosError {
-  response: {
-    data: {
-      message: string;
+  response?: {
+    data?: {
+      message?: string;
     };
   };
 }
 
 const BalanceCheck: React.FC = () => {
-  const [account, setAccount] = useState<string>('');
-  const [balance, setBalance] = useState<number | null>(null);
+  const [balance, setBalance] = useState<BalanceResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleCheckBalance = async (e: FormEvent) => {
@@ -24,34 +20,41 @@ const BalanceCheck: React.FC = () => {
     setBalance(null);
 
     try {
-      const response = await axios.get<BalanceResponse>('/api/balance', {
-        params: { account }
-      });
-
-      setBalance(response.data.balance);
+      const response = await axios.get<BalanceResponse>('http://localhost:3001/api/balance');
+      setBalance(response.data);
     } catch (error: any) {
       const err = error as AxiosError;
-      setError(err.response.data.message || 'An error occurred');
+      const errorMessage = err.response?.data?.message || 'An error occurred';
+      setError(errorMessage);
     }
-  };
-
-  const handleAccountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAccount(e.target.value);
   };
 
   return (
     <div>
       <h2>Check Balance</h2>
       <form onSubmit={handleCheckBalance}>
-        <input
-          type="text"
-          placeholder="Account"
-          value={account}
-          onChange={handleAccountChange}
-        />
         <button type="submit">Check Balance</button>
       </form>
-      {balance !== null && <p>Balance: {balance}</p>}
+      {balance !== null && (
+        <div>
+          <h3>Balances</h3>
+          <ul>
+            {balance.balances.map((b, index) => (
+              <li key={index}>
+                {b.accountTypeName}: {b.balance} {b.currencyName}
+              </li>
+            ))}
+          </ul>
+          {/* <h3>SP Account Balances</h3>
+          <ul>
+            {balance.spAccountBalances.map((sp, index) => (
+              <li key={index}>
+                {sp.accountId}: {sp.odBalance}
+              </li>
+            ))}
+          </ul> */}
+        </div>
+      )}
       {error && <p>Error: {error}</p>}
     </div>
   );
