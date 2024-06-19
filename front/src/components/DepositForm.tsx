@@ -10,7 +10,7 @@ const DepositForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/deposit', {
+      const response = await axios.post('http://localhost:3001//api/deposit', {
         amount,
         fromAccount,
         toAccount

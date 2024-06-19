@@ -1,7 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import axios from 'axios';
 import { BalanceResponse } from './types';  // 型をインポート
-
+import { Box, Button, Heading, Text, UnorderedList, ListItem } from '@chakra-ui/react';
 interface AxiosError {
   response?: {
     data?: {
@@ -30,33 +30,27 @@ const BalanceCheck: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Check Balance</h2>
-      <form onSubmit={handleCheckBalance}>
-        <button type="submit">Check Balance</button>
-      </form>
-      {balance !== null && (
-        <div>
-          <h3>Balances</h3>
-          <ul>
-            {balance.balances.map((b, index) => (
-              <li key={index}>
-                {b.accountTypeName}: {b.balance} {b.currencyName}
-              </li>
-            ))}
-          </ul>
-          {/* <h3>SP Account Balances</h3>
-          <ul>
-            {balance.spAccountBalances.map((sp, index) => (
-              <li key={index}>
-                {sp.accountId}: {sp.odBalance}
-              </li>
-            ))}
-          </ul> */}
-        </div>
-      )}
-      {error && <p>Error: {error}</p>}
-    </div>
+    <Box bg="teal.800" color="white" p={4} rounded="md" mb={6}>
+    <Heading size="md" mb={4}>残高照会します</Heading>
+    <form onSubmit={handleCheckBalance}>
+      <Button type="submit" colorScheme="teal" mb={4}>
+        残高照会します
+      </Button>
+    </form>
+    {balance !== null && (
+      <Box>
+        <Text fontSize="lg" mb={2}>現在の残高は、{balance.balances.reduce((total, b) => total + parseFloat(b.balance), 0)}円です。</Text>
+        <UnorderedList>
+          {balance.balances.map((b, index) => (
+            <ListItem key={index}>
+              {b.accountTypeName}: {b.balance} {b.currencyName}
+            </ListItem>
+          ))}
+        </UnorderedList>
+      </Box>
+    )}
+    {error && <Text color="red.500">Error: {error}</Text>}
+  </Box>
   );
 };
 
