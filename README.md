@@ -28,7 +28,7 @@
 
 - リクエストボディ:
 ```json
-body: JSON.stringify({
+　　　　{
         accountId: "string",
         transferDesignatedDate: currentDate,
         transferDateHolidayCode: "1",
@@ -43,7 +43,7 @@ body: JSON.stringify({
             accountTypeCode: "1",
             accountNumber: "string",
             beneficiaryName: "string"
-          }]})
+          }]}
 ```
 - レスポンス:
 
