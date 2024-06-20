@@ -3,43 +3,49 @@ import axios from 'axios';
 import { Box, Button, Heading, Input, FormControl, FormLabel } from '@chakra-ui/react';
 
 interface TransferFormProps {
-  onTransfer: (transfers: any) => void; // Adjust 'any' based on actual response structure
+  onTransfer: (transfers: any) => void;
 }
 
 const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
   const [amount, setAmount] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [purpose, setPurpose] = useState<string>('');
+  const [beneficiaryBranchCode, setBeneficiaryBranchCode] = useState<string>('');
+  const [accountNumber, setAccountNumber] = useState<string>('');
 
   const handleTransfer = async (e: FormEvent) => {
     e.preventDefault();
 
+    const today = new Date().toISOString().split('T')[0]; // 今日の日付を YYYY-MM-DD 形式で取得
+
     try {
       const requestBody = {
         accountId: "302010008730",
-        transferDesignatedDate: "2024-06-19",
+        transferDesignatedDate: today,
         transferDateHolidayCode: "1",
         totalCount: "1",
-        totalAmount: amount,
+        totalAmount: amount,//金額
         transfers: [
           {
             itemId: "1",
             transferAmount: amount,
             beneficiaryBankCode: "0310",
-            beneficiaryBranchCode: "101",
+            beneficiaryBranchCode,//支店番号
             accountTypeCode: "1",
-            accountNumber: "0009645",
-            beneficiaryName: name
+            accountNumber,//口座番号
+            beneficiaryName: name//名義
           }
         ]
       };
 
       const response = await axios.post('http://localhost:3001/api/transfer', requestBody);
 
-      onTransfer(response.data); // Assuming response data contains the transfers or relevant information
+      onTransfer(response.data);
       setAmount('');
       setName('');
       setPurpose('');
+      setBeneficiaryBranchCode('');
+      setAccountNumber('');
     } catch (error: any) {
       console.error('Error making transfer:', error.response?.data);
     }
@@ -57,6 +63,14 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
     setPurpose(e.target.value);
   };
 
+  const handleBeneficiaryBranchCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setBeneficiaryBranchCode(e.target.value);
+  };
+
+  const handleAccountNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAccountNumber(e.target.value);
+  };
+
   return (
     <Box as="form" onSubmit={handleTransfer} bg="teal.800" color="white" p={4} rounded="md" mb={6}>
       <Heading size="md" mb={4}>出金内容を入力してください。</Heading>
@@ -72,12 +86,34 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
         />
       </FormControl>
       <FormControl mb={4}>
-        <FormLabel>振込先口座</FormLabel>
+        <FormLabel>振込先口座名</FormLabel>
+        <Input
+          type="text"
+          placeholder="振込先口座名"
+          value={name}
+          onChange={handleNameChange}
+          bg="white"
+          color="black"
+        />
+      </FormControl>
+      <FormControl mb={4}>
+        <FormLabel>支店コード</FormLabel>
+        <Input
+          type="text"
+          placeholder="支店コード"
+          value={beneficiaryBranchCode}
+          onChange={handleBeneficiaryBranchCodeChange}
+          bg="white"
+          color="black"
+        />
+      </FormControl>
+      <FormControl mb={4}>
+        <FormLabel>口座番号</FormLabel>
         <Input
           type="text"
           placeholder="口座番号"
-          value={name}
-          onChange={handleNameChange}
+          value={accountNumber}
+          onChange={handleAccountNumberChange}
           bg="white"
           color="black"
         />
