@@ -24,3 +24,28 @@ export interface BalanceResponse {
   balances: Balance[];
   spAccountBalances: SpAccountBalance[];
 }
+
+// src/components/types.ts
+
+export interface Transfer {
+  transactionDate: string;
+  valueDate: string;
+  transactionType: string;
+  amount: string;
+  remarks: string;
+  balance: string;
+  itemKey: string;
+}
+
+export interface TransferResponse {
+  accountId: string;
+  currencyCode: string;
+  currencyName: string;
+  dateFrom: string;
+  dateTo: string;
+  baseDate: string;
+  baseTime: string;
+  hasNext: string;
+  count: string;
+  transactions: Transfer[];
+}

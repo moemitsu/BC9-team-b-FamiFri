@@ -45,6 +45,7 @@ export default function Home() {
         )}
         <BalanceCheck onBalanceFetched={handleBalanceFetched} /> {/* 残高取得関数を渡す */}
         <TransferForm onTransfer={handleTransfer} />
+        <TransferList />
         {totalBalance && <Settlement totalBalance={totalBalance} />} {/* 残高情報を渡す */}
       </Box>
     </ChakraProvider>

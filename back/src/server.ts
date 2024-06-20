@@ -91,8 +91,26 @@ app.get('/api/balance', async (req: Request, res: Response) => {
 });
 
 // 振込履歴照会
-app.get('/api/transfers', (req: Request, res: Response) => {
-  res.status(200).json(transfers);
+app.get('/api/transfers', async(req: Request, res: Response) => {
+  try {
+    const response = await axios.get(`${process.env.SUNABAR_API_URL}/accounts/transactions`, {
+      headers: {
+        'Accept': 'application/json;charset=UTF-8',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'x-access-token': `${process.env.SUNABAR_API_KEY}`
+      },
+    });
+
+    res.status(200).json(response.data);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error('APIリクエストエラー:', error.response?.data);
+      res.status(error.response?.status || 500).json({ error: error.response?.data });
+    } else {
+      console.error('予期しないエラー:', error);
+      res.status(500).json({ error: '予期しないエラーにより残高確認に失敗しました' });
+    }
+  }
 });
 
 app.listen(port, () => {
