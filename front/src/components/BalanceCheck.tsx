@@ -9,8 +9,11 @@ interface AxiosError {
     };
   };
 }
+interface BalanceCheckProps {
+  onBalanceFetched: (balance: BalanceResponse) => void; // 残高情報を親コンポーネントに渡すコールバック
+}
 
-const BalanceCheck: React.FC = () => {
+const BalanceCheck: React.FC<BalanceCheckProps> = ({ onBalanceFetched }) => {
   const [balance, setBalance] = useState<BalanceResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,6 +25,7 @@ const BalanceCheck: React.FC = () => {
     try {
       const response = await axios.get<BalanceResponse>('http://localhost:3001/api/balance');
       setBalance(response.data);
+      onBalanceFetched(response.data); // 残高情報を親コンポーネントに渡す
     } catch (error: any) {
       const err = error as AxiosError;
       const errorMessage = err.response?.data?.message || 'An error occurred';

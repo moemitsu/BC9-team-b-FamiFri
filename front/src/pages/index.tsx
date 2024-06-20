@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import TransferForm from '../components/TransferForm';
 import BalanceCheck from '../components/BalanceCheck';
+import Settlement from '../components/Settlement';
 import TransferList from '../components/TransferList';
+import { BalanceResponse } from '../components/types';
 import { Transfer } from '../types';
 import { ChakraProvider, Box, Heading, Text, Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 
 export default function Home() {
   const [transfers, setTransfers] = useState<Transfer[]>([]);
   const [notification, setNotification] = useState<string>('');
-
+  const [totalBalance, setTotalBalance] = useState<BalanceResponse | null>(null); // 残高情報の状態管理
+  
   const handleTransfer = (newTransfers: Transfer[], transferDate: string) => {
     setTransfers(newTransfers);
-    setNotification(`出金されました。振込依頼の確認をお願いします。日時: ${transferDate}`);
+    setNotification(`支出されました。管理者の方は、振込依頼の確認をお願いします。日時: ${transferDate}`);
+  };
+  
+  const handleBalanceFetched = (balance: BalanceResponse) => {
+    setTotalBalance(balance); // 残高情報をセット
   };
 
   return (
@@ -36,9 +43,9 @@ export default function Home() {
             <Text>{notification}</Text>
           </Box>
         )}
-        <BalanceCheck />
+        <BalanceCheck onBalanceFetched={handleBalanceFetched} /> {/* 残高取得関数を渡す */}
         <TransferForm onTransfer={handleTransfer} />
-        <TransferList />
+        {totalBalance && <Settlement totalBalance={totalBalance} />} {/* 残高情報を渡す */}
       </Box>
     </ChakraProvider>
   );
