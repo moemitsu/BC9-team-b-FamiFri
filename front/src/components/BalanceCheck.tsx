@@ -9,8 +9,11 @@ interface AxiosError {
     };
   };
 }
+interface BalanceCheckProps {
+  onBalanceFetched: (balance: BalanceResponse) => void; // 残高情報を親コンポーネントに渡すコールバック
+}
 
-const BalanceCheck: React.FC = () => {
+const BalanceCheck: React.FC<BalanceCheckProps> = ({ onBalanceFetched }) => {
   const [balance, setBalance] = useState<BalanceResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,6 +25,7 @@ const BalanceCheck: React.FC = () => {
     try {
       const response = await axios.get<BalanceResponse>('http://localhost:3001/api/balance');
       setBalance(response.data);
+      onBalanceFetched(response.data); // 残高情報を親コンポーネントに渡す
     } catch (error: any) {
       const err = error as AxiosError;
       const errorMessage = err.response?.data?.message || 'An error occurred';
@@ -30,27 +34,29 @@ const BalanceCheck: React.FC = () => {
   };
 
   return (
-    <Box bg="teal.800" color="white" p={4} rounded="md" mb={6}>
-    <Heading size="md" mb={4}>残高照会はこちら</Heading>
-    <form onSubmit={handleCheckBalance}>
-      <Button type="submit" colorScheme="teal" mb={4}>
-        残高照会します
-      </Button>
-    </form>
-    {balance !== null && (
-      <Box>
-        <Text fontSize="lg" mb={2}>現在の残高は、{balance.balances.reduce((total, b) => total + parseFloat(b.balance), 0)}円です。</Text>
-        <UnorderedList>
-          {balance.balances.map((b, index) => (
-            <ListItem key={index}>
-              {b.accountTypeName}: {b.balance} {b.currencyName}
-            </ListItem>
-          ))}
-        </UnorderedList>
-      </Box>
-    )}
-    {error && <Text color="red.500">Error: {error}</Text>}
-  </Box>
+    <Box bg="teal.600" color="white" p={4} rounded="md" mb={6}>
+      <Heading size="md" mb={4}>残高照会はこちら</Heading>
+      <form onSubmit={handleCheckBalance}>
+        <Button type="submit" colorScheme="teal" mb={4}>
+          残高照会します
+        </Button>
+      </form>
+      {balance !== null && (
+        <Box>
+          <Text fontSize="2xl" fontWeight="bold" mb={2}>
+            現在の残高は、{balance.balances.reduce((total, b) => total + parseFloat(b.balance), 0)}円です。
+          </Text>
+          {/* <UnorderedList>
+            {balance.balances.map((b, index) => (
+              <ListItem key={index} fontWeight="bold">
+                {b.accountTypeName}: {b.balance} {b.currencyName}
+              </ListItem>
+            ))}
+          </UnorderedList> */}
+        </Box>
+      )}
+      {error && <Text color="red.500">Error: {error}</Text>}
+    </Box>
   );
 };
 

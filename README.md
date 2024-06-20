@@ -17,7 +17,7 @@
 - メソッド: POST
 
 - リクエストヘッダー:
-```json
+```
      {
         'API url': 'https:/api.sunabar.gmo-aozora.com/personal/v1/transfer/request',
         'Accept': 'application/json;charset=UTF-8',
@@ -27,7 +27,7 @@
 
 
 - リクエストボディ:
-```json
+```
 　　　　{
         accountId: "string",
         transferDesignatedDate: currentDate,
@@ -48,7 +48,7 @@
 - レスポンス:
 
 - 成功時 (ステータス 201):
-```json
+```
 {
 "accountId": "string",
 "resultCode": "1",
@@ -57,7 +57,7 @@
 }
 ```
 - エラー時 (ステータス 400, 401, 500):
-```json
+```
 {
   "errorCode": "ERROR12345",
   "errorMessage": "エラーメッセージ"
@@ -69,25 +69,24 @@
 - メソッド: GET
 
 - リクエストヘッダー:
-```json
-{
+  ```
+  {
   'https:/api.gmo-aozora.com/ganb/api/simulator/personal/v1/accounts/balances?accountId=' \
   'accept: application/json;charset=UTF-8' \
   'x-access-token: your access token'
 
-"accountId": "string"	 [ 12 .. 29 ] 
-//口座ID
-//口座を識別するIDまたは、つかいわけ口座を識別するID
+  "accountId": "string"	 [ 12 .. 29 ] //口座ID
+   //口座を識別するIDまたは、つかいわけ口座を識別するID
 
-"x-access-token": "string" (required) //アクセストークン
-}
-```
+  "x-access-token": "string" (required) //アクセストークン
+  }
+  ```
 
 
 - レスポンス:
 
   - 成功時 (ステータス 200):
-  ```json
+  ```
 
    {
   "balances": [
@@ -134,7 +133,7 @@
 
 - エラー時 (ステータス 401, 500):  
 
-  ```json
+  ```
   {
   "errorCode": "ERROR12345",
   "errorMessage": "エラーメッセージ"
