@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Box, Button, Heading, Input, FormControl, FormLabel } from '@chakra-ui/react';
 
 interface TransferFormProps {
-  onTransfer: (transfers: any) => void;
+  onTransfer: (transfers: any, transferDate: string) => void;
 }
 
 const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
@@ -24,23 +24,24 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
         transferDesignatedDate: today,
         transferDateHolidayCode: "1",
         totalCount: "1",
-        totalAmount: amount,//金額
+        totalAmount: amount,
         transfers: [
           {
             itemId: "1",
             transferAmount: amount,
             beneficiaryBankCode: "0310",
-            beneficiaryBranchCode,//支店番号
+            beneficiaryBranchCode,
             accountTypeCode: "1",
-            accountNumber,//口座番号
-            beneficiaryName: name//名義
+            accountNumber,
+            beneficiaryName: name
           }
         ]
       };
 
       const response = await axios.post('http://localhost:3001/api/transfer', requestBody);
 
-      onTransfer(response.data);
+      const transferDate = new Date().toLocaleString(); // 出金日時を取得
+      onTransfer(response.data, transferDate);
       setAmount('');
       setName('');
       setPurpose('');
