@@ -73,26 +73,15 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
   };
 
   return (
-    <Box as="form" onSubmit={handleTransfer} bg="teal.800" color="white" p={4} rounded="md" mb={6}>
-      <Heading size="md" mb={4}>出金内容を入力してください。</Heading>
+    <Box as="form" onSubmit={handleTransfer} bg="teal.600" color="white" p={4} rounded="md" mb={6}>
+      <Heading size="md" mb={4}>支出内容を入力してください。</Heading>
       <FormControl mb={4}>
-        <FormLabel>入金額</FormLabel>
+        <FormLabel>支出額</FormLabel>
         <Input
           type="text"
           placeholder="入金額"
           value={amount}
           onChange={handleAmountChange}
-          bg="white"
-          color="black"
-        />
-      </FormControl>
-      <FormControl mb={4}>
-        <FormLabel>振込先口座名</FormLabel>
-        <Input
-          type="text"
-          placeholder="振込先口座名"
-          value={name}
-          onChange={handleNameChange}
           bg="white"
           color="black"
         />
@@ -120,7 +109,18 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
         />
       </FormControl>
       <FormControl mb={4}>
-        <FormLabel>用途</FormLabel>
+        <FormLabel>振込先口座名</FormLabel>
+        <Input
+          type="text"
+          placeholder="振込先口座名"
+          value={name}
+          onChange={handleNameChange}
+          bg="white"
+          color="black"
+        />
+      </FormControl>
+      <FormControl mb={4}>
+        <FormLabel>支出内容をご記入ください。</FormLabel>
         <Input
           type="text"
           placeholder="用途"
@@ -131,7 +131,7 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
         />
       </FormControl>
       <Button type="submit" colorScheme="teal">
-        出金します
+        支出します
       </Button>
     </Box>
   );

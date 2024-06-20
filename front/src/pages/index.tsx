@@ -3,7 +3,7 @@ import TransferForm from '../components/TransferForm';
 import BalanceCheck from '../components/BalanceCheck';
 import TransferList from '../components/TransferList';
 import { Transfer } from '../types';
-import { ChakraProvider, Box, Heading, Text } from '@chakra-ui/react';
+import { ChakraProvider, Box, Heading, Text, Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 
 export default function Home() {
   const [transfers, setTransfers] = useState<Transfer[]>([]);
@@ -16,10 +16,23 @@ export default function Home() {
 
   return (
     <ChakraProvider>
-      <Box minH="100vh" bg="teal.600" p={8}>
-        <Heading color="white" mb={6}>famifri</Heading>
+      <Box minH="100vh" bg="white" p={8}>
+        <Box bg="teal.600" p={4} rounded="md" mb={6} display="flex" alignItems="center" justifyContent="space-between">
+          <div>
+          <Heading color="white" size="xl">famifri</Heading>
+            <Text fontSize="sm" color="white"> ーファミフリー  予算を決めて、精算ができるアプリ</Text>
+          </div>
+          <Menu>
+            <MenuButton as={Button} colorScheme="teal">
+              メニュー
+            </MenuButton>
+            <MenuList>
+              <MenuItem>設定</MenuItem>
+            </MenuList>
+          </Menu>
+        </Box>
         {notification && (
-          <Box bg="teal.700" color="white" p={4} rounded="md" mb={6}>
+          <Box bg="teal.600" color="white" p={4} rounded="md" mb={6}>
             <Text>{notification}</Text>
           </Box>
         )}

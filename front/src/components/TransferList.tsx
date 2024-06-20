@@ -20,7 +20,7 @@ const TransferList: React.FC = () => {
   }, []);
 
   return (
-    <Box bg="teal.800" color="white" p={4} rounded="md" mb={6}>
+    <Box bg="teal.600" color="white" p={4} rounded="md" mb={6}>
     <Heading size="md" mb={4}>Transfer List</Heading>
     <UnorderedList>
       {transfers.map((transfer, index) => (
