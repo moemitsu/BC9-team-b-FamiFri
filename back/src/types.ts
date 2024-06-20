@@ -44,3 +44,26 @@ export interface Transfer {
 
 }
 
+export interface TransferItem {
+  itemId: string;
+  transferAmount: string;
+  beneficiaryBankCode: string;
+  beneficiaryBranchCode: string;
+  accountTypeCode: string;
+  accountNumber: string;
+  beneficiaryName: string;
+  requestId: string;
+  status?: string;
+  statusDescription?: string;
+}
+
+
+export interface TransferStatus {
+  requestId: string;
+  transferStatus: string;
+  transferStatusDescription: string;
+}
+
+export interface TransferStatusResponse {
+  transfers: TransferStatus[];
+}
