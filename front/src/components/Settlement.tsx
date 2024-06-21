@@ -41,7 +41,7 @@ const Settlement: React.FC<SettlementProps> = ({ totalBalance }) => {
         計算する
       </Button>
       <Box mt={4}>
-        <Text fontSize="lg">1人当たりの精算金額: {productionAmount.toFixed(2)} 円</Text>
+      <Text fontSize="lg">1人当たりの精算金額: {productionAmount.toLocaleString()} 円</Text>
       </Box>
     </Box>
   );
