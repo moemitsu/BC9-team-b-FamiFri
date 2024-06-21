@@ -21,8 +21,17 @@ const DepositRequest: React.FC<DepositRequestProps> = ({
   deadline 
 }) => {
   return (
-    <Box bg="teal.600" color="white" p={4} rounded="md" mb={6}>
-      <Heading size="md" mb={4}>入金のお願い（入金期限：{deadline}）</Heading>
+    <Box 
+      borderWidth="1px" 
+      borderStyle="solid" 
+      borderColor="teal.600" 
+      color="gray.700" 
+      p={4} 
+      rounded="md" 
+      mb={6} 
+      bg="white"
+    >
+      <Heading size="md" mb={4}>入金のお願い（入金期限：{deadline}）☆下記のとおり集金いたします。ご協力をお願いいたします☆</Heading>
       <Flex mb={4}>
         <FormControl mr={4}>
           <FormLabel>銀行名</FormLabel>
@@ -48,7 +57,7 @@ const DepositRequest: React.FC<DepositRequestProps> = ({
           <Text fontSize="lg" fontWeight="bold">{accountHolder}</Text>
         </FormControl>
         <FormControl mr={4}>
-          <FormLabel>入金金額</FormLabel>
+          <FormLabel>入金額</FormLabel>
           <Text fontSize="lg" fontWeight="bold">{depositAmount.toLocaleString()} 円</Text>
         </FormControl>
         <FormControl>
