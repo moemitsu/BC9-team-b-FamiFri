@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { Transfer,TransferStatusResponse } from './types';
+import { Transfer,TransferItem,TransferStatusResponse } from './types';
 import cors from 'cors';
 
 dotenv.config();
@@ -17,27 +17,15 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-let transfers: Transfer[] = [];
+let transfers: TransferItem[] = [];
 
 
 app.post('/api/transfer', async (req: Request, res: Response) => {
+  const { accountId, transferDesignatedDate, transferDateHolidayCode, totalCount, totalAmount, transfers } = req.body;
 
-  const { itemId, transferAmount, beneficiaryBankCode, beneficiaryBranchCode, accountTypeCode, accountNumber, beneficiaryName } = req.body;
-
-  if (!itemId || !transferAmount || !beneficiaryBankCode || !beneficiaryBranchCode || !accountTypeCode || !accountNumber || !beneficiaryName) {
-    const missingParams = [];
-    if (!itemId) missingParams.push('itemId');
-    if (!transferAmount) missingParams.push('transferAmount');
-    if (!beneficiaryBankCode) missingParams.push('beneficiaryBankCode');
-    if (!beneficiaryBranchCode) missingParams.push('beneficiaryBranchCode');
-    if (!accountTypeCode) missingParams.push('accountTypeCode');
-    if (!accountNumber) missingParams.push('accountNumber');
-    if (!beneficiaryName) missingParams.push('beneficiaryName');
-    
-    return res.status(400).json({ error: 'Missing required parameters', missingParams });
-
+  if (!accountId || !transferDesignatedDate || !transferDateHolidayCode || !totalCount || !totalAmount || !transfers || !transfers.length) {
+    return res.status(400).json({ error: 'Missing required parameters' });
   }
-
   const transfer = transfers[0];
 
   if (!transfer.itemId || !transfer.transferAmount || !transfer.beneficiaryBankCode || !transfer.beneficiaryBranchCode || !transfer.accountTypeCode || !transfer.accountNumber || !transfer.beneficiaryName) {
@@ -102,22 +90,25 @@ app.get('/api/balance', async (req: Request, res: Response) => {
 });
 
 
-// 振込ステータス一覧取得
+// 入出金照会
 app.get('/api/status', async (req: Request, res: Response) => {
-  // const queryKeyClass = '2'; // 照会対象キー区分の値
-  // const accountId = "302010008723"; // 指定された口座番号
+  const { accountId, dateFrom, dateTo } = req.query;
+
+  if (!accountId || !dateFrom || !dateTo) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
 
   try {
-    const response = await axios.get<TransferStatusResponse>(`${process.env.SUNABAR_API_URL}/transfer/status`, {
-      params: {
-        queryKeyClass: '2',
-        accountId: "302010008723",
-      },
+    const response = await axios.get<TransferStatusResponse>(`${process.env.SUNABAR_API_URL}/accounts/transactions`, {
+      // params: {
+      //   accountId: accountId as string,
+      //   dateFrom: dateFrom as string,
+      //   dateTo: dateTo as string,
+      // },
       headers: {
         'Accept': 'application/json;charset=UTF-8',
         'Content-Type': 'application/json;charset=UTF-8',
-        'x-access-token': `${process.env.SUNABAR_API_KEY}`
-
+        'x-access-token':`${process.env.SUNABAR_API_KEY}`
       }
     });
 
