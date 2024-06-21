@@ -14,7 +14,7 @@ export default function Home() {
   
   const handleTransfer = (newTransfers: Transfer[], transferDate: string) => {
     setTransfers(newTransfers);
-    setNotification(`支出されました。管理者の方は、振込依頼の確認をお願いします。日時: ${transferDate}`);
+    setNotification(`お知らせ：支出されました。管理者の方は、振込依頼の確認をお願いします。日時: ${transferDate}`);
   };
   
   const handleBalanceFetched = (balance: BalanceResponse) => {
