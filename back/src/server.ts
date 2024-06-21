@@ -92,28 +92,7 @@ app.get('/api/balance', async (req: Request, res: Response) => {
   }
 });
 
-
-
-// // 入出金照会
-// app.get('/api/status', async (req: Request, res: Response) => {
-//   const { accountId, dateFrom, dateTo } = req.query;
-
-//   if (!accountId || !dateFrom || !dateTo) {
-//     return res.status(400).json({ error: 'Missing required parameters' });
-//   }
-
-//   try {
-//     const response = await axios.get<TransferStatusResponse>(`${process.env.SUNABAR_API_URL}/accounts/transactions`, {
-//       // params: {
-//       //   accountId: accountId as string,
-//       //   dateFrom: dateFrom as string,
-//       //   dateTo: dateTo as string,
-//       // },
-//       headers: {
-//         'Accept': 'application/json;charset=UTF-8',
-//         'Content-Type': 'application/json;charset=UTF-8',
-//         'x-access-token':`${process.env.SUNABAR_API_KEY}`
-
+    
 // 振込ステータス一覧取得エンドポイント
 app.get('/api/status', async (req: Request, res: Response) => {
   console.log("Request received at /api/status");

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Box, Heading, UnorderedList, ListItem, Button } from '@chakra-ui/react';
 
+
 interface Transaction {
   transferDesignatedDate: string;
   transferAmount: string;
@@ -28,7 +29,12 @@ const TransferList: React.FC = () => {
     fetchTransactions();
   }, []);
 
+  const toggleTransactions = () => {
+    setShowTransactions(prevShowTransactions => !prevShowTransactions);
+  };
+
   return (
+
     <Box bg="teal.600" color="white" p={4} rounded="md" mb={6} height="150px" overflowY="auto">
       <Heading size="md" mb={4}>入出金状況</Heading>
       <Button colorScheme="teal" mb={4} onClick={fetchTransactions}>更新</Button>
@@ -39,6 +45,7 @@ const TransferList: React.FC = () => {
           </ListItem>
         ))}
       </UnorderedList>
+
     </Box>
   );
 };
