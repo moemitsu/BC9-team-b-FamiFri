@@ -6,6 +6,7 @@ import TransferList from '../components/TransferList';
 import { BalanceResponse } from '../components/types';
 import { Transfer } from '../types';
 import { ChakraProvider, Box, Heading, Text, Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { Link, Element } from 'react-scroll';
 
 export default function Home() {
   const [transfers, setTransfers] = useState<Transfer[]>([]);
@@ -26,7 +27,7 @@ export default function Home() {
       <Box minH="100vh" bg="white" p={8}>
         <Box bg="teal.600" p={4} rounded="md" mb={6} display="flex" alignItems="center" justifyContent="space-between">
           <div>
-          <Heading color="white" size="xl">famifri</Heading>
+            <Heading color="white" size="xl">famifri</Heading>
             <Text fontSize="sm" color="white"> ーファミフリー  予算を決めて、精算ができるアプリ</Text>
           </div>
           <Menu>
@@ -34,7 +35,18 @@ export default function Home() {
               メニュー
             </MenuButton>
             <MenuList>
-              <MenuItem>設定</MenuItem>
+              <Link to="balance-check" smooth={true} duration={500}>
+                <MenuItem>残高を見る</MenuItem>
+              </Link>
+              <Link to="transfer-form" smooth={true} duration={500}>
+                <MenuItem>使ったお金を申請する</MenuItem>
+              </Link>
+              <Link to="transfer-list" smooth={true} duration={500}>
+                <MenuItem>使ったお金の一覧を見る</MenuItem>
+              </Link>
+              <Link to="settlement" smooth={true} duration={500}>
+                <MenuItem>余ったお金を清算する</MenuItem>
+              </Link>
             </MenuList>
           </Menu>
         </Box>
@@ -43,11 +55,20 @@ export default function Home() {
             <Text>{notification}</Text>
           </Box>
         )}
-        <BalanceCheck onBalanceFetched={handleBalanceFetched} /> {/* 残高取得関数を渡す */}
-        <TransferForm onTransfer={handleTransfer} />
-        <TransferList />
-        {totalBalance && <Settlement totalBalance={totalBalance} />} {/* 残高情報を渡す */}
+        <Element name="balance-check">
+          <BalanceCheck onBalanceFetched={handleBalanceFetched} /> {/* 残高取得関数を渡す */}
+        </Element>
+        <Element name="transfer-form">
+          <TransferForm onTransfer={handleTransfer} />
+        </Element>
+        <Element name="transfer-list">
+          <TransferList />
+        </Element>
+        <Element name="settlement">
+          {totalBalance && <Settlement totalBalance={totalBalance} />} {/* 残高情報を渡す */}
+        </Element>
       </Box>
     </ChakraProvider>
   );
 }
+
