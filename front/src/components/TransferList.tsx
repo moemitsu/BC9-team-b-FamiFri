@@ -1,35 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Transfer, TransferResponse } from './types';
-import { Box, Heading, UnorderedList, ListItem } from '@chakra-ui/react';
+import { Box, Heading, UnorderedList, ListItem, Button } from '@chakra-ui/react';
+
+
+interface Transaction {
+  transferDesignatedDate: string;
+  transferAmount: string;
+  beneficiaryName: string;
+}
 
 const TransferList: React.FC = () => {
-  const [transactions, setTransactions] = useState<Transfer[]>([]);
-  const [showTransactions, setShowTransactions] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await axios.get<{ transactions: Transaction[] }>('http://localhost:3001/api/status');
+      console.log('Fetched transactions:', response.data.transactions); // データのログ出力
+      const sortedTransactions = response.data.transactions.sort((a, b) => 
+        new Date(b.transferDesignatedDate).getTime() - new Date(a.transferDesignatedDate).getTime()
+      );
+      setTransactions(sortedTransactions);
+    } catch (error) {
+      console.error('Error fetching transfers:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const accountId = "302010008730"; // ここに適切なaccountIdを設定する
-        const dateFrom = new Date(); // ここでは例として現在の日付を使用
-        dateFrom.setMonth(dateFrom.getMonth() - 1); // 1ヶ月前の日付を設定
-        const dateTo = new Date(); // 現在の日付
-
-        const response = await axios.get<TransferResponse>('http://localhost:3001/api/status', {
-          params: {
-            accountId,
-            dateFrom: dateFrom.toISOString().split('T')[0], // 'YYYY-MM-DD'形式に変換
-            dateTo: dateTo.toISOString().split('T')[0], // 'YYYY-MM-DD'形式に変換
-            nextItemKey:0
-          },
-        });
-        console.log('Fetched transactions:', response.data.transactions); // データのログ出力
-        setTransactions(response.data.transactions);
-      } catch (error) {
-        console.error('Error fetching transfers:', error);
-      }
-    };
-
     fetchTransactions();
   }, []);
 
@@ -38,21 +34,18 @@ const TransferList: React.FC = () => {
   };
 
   return (
-    <Box bg="teal.600" color="white" p={4} rounded="md" mb={6}>
-      <Heading size="md" mb={4} cursor="pointer" onClick={toggleTransactions}>
-        入出金状況
-      </Heading>
-      {showTransactions && (
-        <UnorderedList>
-          {transactions.map((transaction, index) => (
-            <ListItem key={index}>
-              <strong>{transaction.remarks}</strong>
-               - {transaction.transactionType === '1' ? '入金' : '出金'}: 
-               {transaction.amount}円 on {new Date(transaction.transactionDate).toLocaleString()}
-            </ListItem>
-          ))}
-        </UnorderedList>
-      )}
+
+    <Box bg="teal.600" color="white" p={4} rounded="md" mb={6} height="150px" overflowY="auto">
+      <Heading size="md" mb={4}>入出金状況</Heading>
+      <Button colorScheme="teal" mb={4} onClick={fetchTransactions}>更新</Button>
+      <UnorderedList style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+        {transactions.map((transaction, index) => (
+          <ListItem key={index} mb={2}>
+            <strong>{transaction.beneficiaryName}</strong> さんの口座に {transaction.transferAmount}円を入金しました: {transaction.transferDesignatedDate}
+          </ListItem>
+        ))}
+      </UnorderedList>
+
     </Box>
   );
 };

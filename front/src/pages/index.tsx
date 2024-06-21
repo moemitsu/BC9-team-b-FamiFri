@@ -8,6 +8,7 @@ import TransferList from '../components/TransferList';
 import { BalanceResponse } from '../components/types';
 import DepositRequest from '../components/DepositRequest';
 import { Transfer } from '../types';
+import { Link, Element } from 'react-scroll';
 import { ChakraProvider, Box, Heading, Text, Button, Flex, Menu, MenuButton, MenuList, MenuItem, VStack } from '@chakra-ui/react';
 import EventTitle from '../components/EventTitle'; // 新しく追加したEventTitleコンポーネントをインポート
 
@@ -54,7 +55,18 @@ export default function Home() {
               メニュー
             </MenuButton>
             <MenuList>
-              <MenuItem>設定</MenuItem>
+              <Link to="balance-check" smooth={true} duration={500}>
+                <MenuItem>残高を見る</MenuItem>
+              </Link>
+              <Link to="transfer-form" smooth={true} duration={500}>
+                <MenuItem>使ったお金を申請する</MenuItem>
+              </Link>
+              <Link to="transfer-list" smooth={true} duration={500}>
+                <MenuItem>使ったお金の一覧を見る</MenuItem>
+              </Link>
+              <Link to="settlement" smooth={true} duration={500}>
+                <MenuItem>余ったお金を清算する</MenuItem>
+              </Link>
             </MenuList>
           </Menu>
         </Flex>
@@ -92,3 +104,4 @@ export default function Home() {
     </ChakraProvider>
   );
 }
+

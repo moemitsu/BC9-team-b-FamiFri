@@ -92,26 +92,6 @@ app.get('/api/balance', async (req: Request, res: Response) => {
   }
 });
 
-// 入出金照会
-// app.get('/api/status', async (req: Request, res: Response) => {
-//   const { accountId, dateFrom, dateTo } = req.query;
-
-//   if (!accountId || !dateFrom || !dateTo) {
-//     return res.status(400).json({ error: 'Missing required parameters' });
-//   }
-
-//   try {
-//     const response = await axios.get<TransferStatusResponse>(`${process.env.SUNABAR_API_URL}/accounts/transactions`, {
-//       // params: {
-//       //   accountId: accountId as string,
-//       //   dateFrom: dateFrom as string,
-//       //   dateTo: dateTo as string,
-//       // },
-//       headers: {
-//         'Accept': 'application/json;charset=UTF-8',
-//         'Content-Type': 'application/json;charset=UTF-8',
-//         'x-access-token':`${process.env.SUNABAR_API_KEY}`
-//       }
     
 // 振込ステータス一覧取得エンドポイント
 app.get('/api/status', async (req: Request, res: Response) => {
@@ -121,7 +101,7 @@ app.get('/api/status', async (req: Request, res: Response) => {
     const response = await axios.get<TransferStatusResponse>(`${process.env.SUNABAR_API_URL}/transfer/status`, {
       params: {
         queryKeyClass: '2',
-        accountId: "302010008723",
+        accountId: "301010008792",
         dateFrom: '2024-06-01',  
         dateTo: '2024-06-30'   
       },
@@ -135,19 +115,44 @@ app.get('/api/status', async (req: Request, res: Response) => {
 
     console.log("Response from external API:", response.data);
 
-     // レスポンスデータ全体をクライアントに返す
-     res.status(200).json(response.data);
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error('APIリクエストエラー:', error.response?.data);
-        res.status(error.response?.status || 500).json({ error: error.response?.data });
-      } else {
-        console.error('予期しないエラー:', error);
-        res.status(500).json({ error: '予期しないエラーにより振込一覧の取得に失敗しました' });
-      }
-    }
-  });
+  //    // レスポンスデータ全体をクライアントに返す
+  //    res.status(200).json(response.data);
+  //   } catch (error: unknown) {
+  //     if (axios.isAxiosError(error)) {
+  //       console.error('APIリクエストエラー:', error.response?.data);
+  //       res.status(error.response?.status || 500).json({ error: error.response?.data });
+  //     } else {
+  //       console.error('予期しないエラー:', error);
+  //       res.status(500).json({ error: '予期しないエラーにより振込一覧の取得に失敗しました' });
+  //     }
+  //   }
+  // });
   
+// 必要な項目のみ抽出
+const transactions = response.data.transferDetails.flatMap(detail =>
+  detail.transferResponses.flatMap(response => 
+    response.transferInfos.map(info => ({
+      transferDesignatedDate: response.transferDesignatedDate,
+      transferAmount: info.transferAmount,
+      beneficiaryName: info.beneficiaryName
+    }))
+  )
+);
+
+// 抽出したデータを返す
+res.status(200).json({ transactions });
+} catch (error: unknown) {
+if (axios.isAxiosError(error)) {
+  console.error('APIリクエストエラー:', error.response?.data);
+  res.status(error.response?.status || 500).json({ error: error.response?.data });
+} else {
+  console.error('予期しないエラー:', error);
+  res.status(500).json({ error: '予期しないエラーにより振込一覧の取得に失敗しました' });
+}
+}
+});
+
+
   app.listen(port, () => {
     console.log(`サーバーはポート${port}で動作しています`);
   });
