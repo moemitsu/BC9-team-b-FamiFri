@@ -44,18 +44,18 @@
 
 // }
 
-// export interface TransferItem {
-//   itemId: string;
-//   transferAmount: string;
-//   beneficiaryBankCode: string;
-//   beneficiaryBranchCode: string;
-//   accountTypeCode: string;
-//   accountNumber: string;
-//   beneficiaryName: string;
-//   requestId: string;
-//   status?: string;
-//   statusDescription?: string;
-// }
+export interface TransferItem {
+  itemId: string;
+  transferAmount: string;
+  beneficiaryBankCode: string;
+  beneficiaryBranchCode: string;
+  accountTypeCode: string;
+  accountNumber: string;
+  beneficiaryName: string;
+  requestId: string;
+  status?: string;
+  statusDescription?: string;
+}
 
 
 // export interface TransferStatus {
