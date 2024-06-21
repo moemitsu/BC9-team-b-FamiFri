@@ -6,6 +6,13 @@ interface TransferFormProps {
   onTransfer: (transfers: any, transferDate: string) => void;
 }
 
+// 全角カタカナを半角カタカナに変換する関数
+const toHalfWidthKatakana = (str: string) => {
+  return str.replace(/[\u30a1-\u30f6]/g, ch =>
+    String.fromCharCode(ch.charCodeAt(0) - 0x60)
+  );
+};
+
 const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
   const [amount, setAmount] = useState<string>('');
   const [name, setName] = useState<string>('');
@@ -49,6 +56,7 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
       setAccountNumber('');
     } catch (error: any) {
       console.error('Error making transfer:', error.response?.data);
+      alert('振込できませんでした。入力内容を確認してください');
     }
   };
 
@@ -57,7 +65,9 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    const inputValue = e.target.value;
+    const halfWidthKatakana = toHalfWidthKatakana(inputValue);
+    setName(halfWidthKatakana);
   };
 
   const handlePurposeChange = (e: ChangeEvent<HTMLInputElement>) => {
