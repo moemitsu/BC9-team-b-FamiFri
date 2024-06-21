@@ -20,6 +20,12 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
   const [beneficiaryBranchCode, setBeneficiaryBranchCode] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
 
+  const [formVisible, setFormVisible] = useState<boolean>(false);
+
+  const handleToggleForm = () => {
+    setFormVisible(!formVisible);
+  };
+
   const handleTransfer = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -83,66 +89,72 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
   };
 
   return (
-    <Box as="form" onSubmit={handleTransfer} bg="teal.600" color="white" p={4} rounded="md" mb={6}>
-      <Heading size="md" mb={4}>支出内容を入力してください。</Heading>
-      <FormControl mb={4}>
-        <FormLabel>支出額</FormLabel>
-        <Input
-          type="text"
-          placeholder="入金額"
-          value={amount}
-          onChange={handleAmountChange}
-          bg="white"
-          color="black"
-        />
-      </FormControl>
-      <FormControl mb={4}>
-        <FormLabel>支店コード</FormLabel>
-        <Input
-          type="text"
-          placeholder="支店コード"
-          value={beneficiaryBranchCode}
-          onChange={handleBeneficiaryBranchCodeChange}
-          bg="white"
-          color="black"
-        />
-      </FormControl>
-      <FormControl mb={4}>
-        <FormLabel>口座番号</FormLabel>
-        <Input
-          type="text"
-          placeholder="口座番号"
-          value={accountNumber}
-          onChange={handleAccountNumberChange}
-          bg="white"
-          color="black"
-        />
-      </FormControl>
-      <FormControl mb={4}>
-        <FormLabel>振込先口座名</FormLabel>
-        <Input
-          type="text"
-          placeholder="振込先口座名"
-          value={name}
-          onChange={handleNameChange}
-          bg="white"
-          color="black"
-        />
-      </FormControl>
-      <FormControl mb={4}>
-        <FormLabel>支出内容をご記入ください。</FormLabel>
-        <Input
-          type="text"
-          placeholder="用途"
-          value={purpose}
-          onChange={handlePurposeChange}
-          bg="white"
-          color="black"
-        />
-      </FormControl>
-      <Button type="submit" colorScheme="teal">
-        支出します
-      </Button>
+    <Box bg="teal.600" color="white" p={4} rounded="md" mb={6}>
+      <Heading size="md" mb={4} cursor="pointer" onClick={handleToggleForm}>
+        支出はこちらから
+      </Heading>
+      {formVisible && (
+        <form onSubmit={handleTransfer}>
+          <FormControl mb={4}>
+            <FormLabel>支出金額</FormLabel>
+            <Input
+              type="text"
+              placeholder="金額"
+              value={amount}
+              onChange={handleAmountChange}
+              bg="white"
+              color="black"
+            />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>支店コード</FormLabel>
+            <Input
+              type="text"
+              placeholder="支店コード"
+              value={beneficiaryBranchCode}
+              onChange={handleBeneficiaryBranchCodeChange}
+              bg="white"
+              color="black"
+            />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>口座番号</FormLabel>
+            <Input
+              type="text"
+              placeholder="口座番号"
+              value={accountNumber}
+              onChange={handleAccountNumberChange}
+              bg="white"
+              color="black"
+            />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>振込先口座名義（半角ｶﾀｶﾅ）</FormLabel>
+            <Input
+              type="text"
+              placeholder="振込先口座名義"
+              value={name}
+              onChange={handleNameChange}
+              bg="white"
+              color="black"
+            />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>支出内容をご記入ください。</FormLabel>
+            <Input
+              type="text"
+              placeholder="用途"
+              value={purpose}
+              onChange={handlePurposeChange}
+              bg="white"
+              color="black"
+            />
+          </FormControl>
+          <Button type="submit" colorScheme="teal">
+            支出します
+          </Button>
+        </form>
+      )}
     </Box>
   );
 };
