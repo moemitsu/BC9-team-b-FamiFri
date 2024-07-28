@@ -14,10 +14,10 @@ GMOあおぞらネット銀行（株）のsunabarAPIを活用
 
 ## 使用技術
 - フロントエンド
-  - Next.js(PagesRouter): 14.2.4
+  - Next.js(Pages Router): 14.2.4
   - TypeScript: 5.4.5
   - ChakraUI: 2.8.2
 - バックエンド
-  - Express(generator): 4.17.1
+  - Express(Generator): 4.17.1
   - TypeScript: 4.9.5
 
