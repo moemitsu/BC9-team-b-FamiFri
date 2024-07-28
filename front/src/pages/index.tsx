@@ -70,14 +70,6 @@ export default function Home() {
             </MenuList>
           </Menu>
         </Flex>
-        <EventTitle 
-          eventName="サマーフェスティバル"
-          eventDateTime="2024年7月20日 午後3時"
-          participantsCount={25}
-          adultsCount={15} // 大人の参加者数
-          childrenCount={10} // 子供の参加者数
-          participants={['田中太郎', '山田花子', '佐藤次郎', '鈴木一郎']}
-        />
         {notifications.length > 0 && (
           <VStack align="start" bg="teal.600" color="white" p={4} rounded="md" mb={6}>
             {notifications.map((notification, index) => (
@@ -87,6 +79,15 @@ export default function Home() {
             ))}
           </VStack>
         )}
+        <EventTitle 
+          eventName="サマーフェスティバル"
+          eventDateTime="2024年7月20日 午後3時"
+          participantsCount={25}
+          adultsCount={15} // 大人の参加者数
+          childrenCount={10} // 子供の参加者数
+          participants={['田中太郎', '山田花子', '佐藤次郎', '鈴木一郎']}
+        />
+        
         <DepositRequest 
           bankName={'GMOあおぞらネット銀行'} 
           branchNumber={'310'} 

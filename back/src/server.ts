@@ -101,7 +101,7 @@ app.get('/api/status', async (req: Request, res: Response) => {
     const response = await axios.get<TransferStatusResponse>(`${process.env.SUNABAR_API_URL}/transfer/status`, {
       params: {
         queryKeyClass: '2',
-        accountId: "301010008792",
+        accountId: "302010008730",
         dateFrom: '2024-06-01',  
         dateTo: '2024-06-30'   
       },
@@ -130,7 +130,7 @@ app.get('/api/status', async (req: Request, res: Response) => {
   
 // 必要な項目のみ抽出
 const transactions = response.data.transferDetails.flatMap(detail =>
-  detail.transferResponses.flatMap(response => 
+  detail.transferResponses.flatMap((response: { transferInfos: any[]; transferDesignatedDate: any; }) => 
     response.transferInfos.map(info => ({
       transferDesignatedDate: response.transferDesignatedDate,
       transferAmount: info.transferAmount,
