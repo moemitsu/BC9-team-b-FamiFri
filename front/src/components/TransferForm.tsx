@@ -33,7 +33,7 @@ const TransferForm: React.FC<TransferFormProps> = ({ onTransfer }) => {
 
     try {
       const requestBody = {
-        accountId: "301010008792",
+        accountId: "302010008730",
         transferDesignatedDate: today,
         transferDateHolidayCode: "1",
         totalCount: "1",
